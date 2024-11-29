@@ -17,7 +17,9 @@ class Player
     public:
         enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
 
+        // constructor
         Player(GameMechs* thisGMRef);
+        // destructor
         ~Player();
 
         objPos getPlayerPos() const; // Upgrade this in iteration 3.       
