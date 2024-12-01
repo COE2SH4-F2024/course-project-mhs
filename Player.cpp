@@ -34,7 +34,7 @@ objPosArrayList* Player::getPlayerPos() const
     //return playerPosList->getHeadElement();
 
     objPos head;
-    playerPosList->getHeadElement(head);  // pass `head` by reference to get the head element
+    playerPosList->getHeadElement(head);  // pass head by reference to get the head element
     return playerPosList;  // return the head object
 }
 
@@ -43,40 +43,40 @@ void Player::updatePlayerDir()
     // PPA3 input processing logic  
 
     char input = mainGameMechsRef->getInput();
+    
+    if (input != 0) {
+        switch (input) {
 
-    switch (input) {
+            case ' ':
+                mainGameMechsRef->setExitTrue();
+                break;
 
-        case ' ':
-            mainGameMechsRef->setExitTrue();
-            break;
+            case 'W': case 'w':
+                if (myDir != DOWN) {
+                    myDir = UP;
+                }
+                break;
 
-        case 'W': case 'w':
-            if (myDir != DOWN) {
-                myDir = UP;
-            }
-            break;
+            case 'S': case 's':
+                if (myDir != UP) {
+                    myDir = DOWN;
+                }
+                break;
 
-        case 'S': case 's':
-            if (myDir != UP) {
-                myDir = DOWN;
-            }
-            break;
+            case 'A': case 'a':
+                if (myDir != RIGHT) {
+                    myDir = LEFT;
+                }
+                break;
 
-        case 'A': case 'a':
-            if (myDir != RIGHT) {
-                myDir = LEFT;
-            }
-            break;
-
-        case 'D': case 'd':
-            if (myDir != LEFT) {
-                myDir = RIGHT;
-            }
-            break;
-        default:
-            break;
+            case 'D': case 'd':
+                if (myDir != LEFT) {
+                    myDir = RIGHT;
+                }
+                break;
+        }
     }
-    }
+}
 
 void Player::movePlayer() {
     // Get the current head position
@@ -86,32 +86,32 @@ void Player::movePlayer() {
     playerPosList->getHeadElement(currentHead);
 
     // Calculate new head position based on direction
-    int currX = currentHead.pos->x;
-    int currY = currentHead.pos->y;
+    int newX = currentHead.pos->x;
+    int newY = currentHead.pos->y;
 
     switch (myDir) {
         case UP:
-            currY--;
-            if (currY < 1) currY = mainGameMechsRef->getBoardSizeY() - 2; // Wrap around
+            newY--;
+            if (newY < 1) newY = mainGameMechsRef->getBoardSizeY() - 2; // Wrap around
             break;
         case DOWN:
-            currY++;
-            if (currY >= mainGameMechsRef->getBoardSizeY() - 1) currY = 1; // Wrap around
+            newY++;
+            if (newY >= mainGameMechsRef->getBoardSizeY() - 1) newY = 1; // Wrap around
             break;
         case LEFT:
-            currX--;
-            if (currX < 1) currX = mainGameMechsRef->getBoardSizeX() - 2; // Wrap around
+            newX--;
+            if (newX < 1) newX = mainGameMechsRef->getBoardSizeX() - 2; // Wrap around
             break;
         case RIGHT:
-            currX++;
-            if (currX >= mainGameMechsRef->getBoardSizeX() - 1) currX = 1; // Wrap around
+            newX++;
+            if (newX >= mainGameMechsRef->getBoardSizeX() - 1) newX = 1; // Wrap around
             break;
         default:
-            break; // No movement if direction is STOP
+            return; // No movement if direction is STOP
     }
 
     // Create a new head position
-    objPos newHead(currX, currY, '*');
+    objPos newHead(newX, newY, '*');
 
     // Add new head to the list and remove the tail
     playerPosList->insertHead(newHead);
@@ -122,7 +122,7 @@ bool Player::checkSelfCollision() {
    // objPos head = playerPosList->getHeadElement();
 
   objPos head;
-  playerPosList->getHeadElement(head);  // Get the head element by reference
+    playerPosList->getHeadElement(head);  // Get the head element by reference
 
     // iterate through the body, no head!!
   for (int i = 1; i < playerPosList->getSize(); i++) 
@@ -139,16 +139,17 @@ bool Player::checkSelfCollision() {
 }
 
 
+
 bool Player::checkFoodConsumption() 
 {
     //objPos head = *playerPosList->getHeadElement();
     //objPos food = *mainGameMechsRef->getFoodPos(); //  current food position
     
     objPos head;  // local variable to store the player's head position
-    playerPosList->getHeadElement(head);  // Update `head` with the first element
+    playerPosList->getHeadElement(head);  // Update head with the first element
 
     objPos food;  // local variable to store the food position
-    mainGameMechsRef->getFoodPos(food);  // Update `food` with the current food position
+    mainGameMechsRef->getFoodPos(food);  // Update food with the current food position
     
     return head.isPosEqual(&food);
 }
