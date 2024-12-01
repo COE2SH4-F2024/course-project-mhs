@@ -8,9 +8,9 @@ objPos::objPos()
     symbol = 0; //NULL
 }
 
+
 objPos::objPos(int xPos, int yPos, char sym)
 {
-    pos = new Pos;
     pos->x = xPos;
     pos->y = yPos;
     symbol = sym;
@@ -19,6 +19,19 @@ objPos::objPos(int xPos, int yPos, char sym)
 // Respect the rule of six / minimum four
 // [TODO] Implement the missing special member functions to meet the minimum four rule
 
+// deep copy
+objPos::objPos(const objPos& o) 
+{
+    pos = new Pos;             // Allocate new memory for the `pos` pointer.
+    pos->x = o.pos->x;         // Deep copy the `x` coordinate.
+    pos->y = o.pos->y;         // Deep copy the `y` coordinate.
+    symbol = o.symbol;         // Copy the symbol directly.
+}
+
+objPos::~objPos()
+{
+    delete pos;
+}
 
 
 
