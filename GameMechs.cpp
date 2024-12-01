@@ -1,5 +1,6 @@
 #include "GameMechs.h"
 #include "MacUILib.h"
+#include <iostream>
 
 
 GameMechs::GameMechs()
@@ -23,6 +24,8 @@ GameMechs::GameMechs(int boardX, int boardY)
     exitFlag = false; 
     loseFlag = false; 
     score = 0; 
+    food.pos = new Pos();  // Allocate memory for the position of the food
+
 } 
 
 // do you need a destructor?
@@ -123,7 +126,7 @@ void GameMechs::generateFood(objPosArrayList* blockOff) // Food generation
         }
     }
     // once a valid position is found, set the food position
-    food.setObjPos(food.pos->x, food.pos->y, 'F');  // Assuming 'F' is the food symbol
+    food.setObjPos(food.pos->x, food.pos->y, 'O');  // Assuming 'F' is the food symbol
 
 
 }
@@ -131,9 +134,11 @@ void GameMechs::generateFood(objPosArrayList* blockOff) // Food generation
  
 // More methods should be added here
 
-void GameMechs::getFoodPos(objPos &returnPos)
-{
-    /* Getter method for obtaining the current position of the food.
-       Return value is written into the returnPos via pass by reference. */
-    returnPos.setObjPos(food.pos->x, food.pos->y, food.symbol); // Implementation
+void GameMechs::getFoodPos(objPos &returnPos) {
+
+    if (food.pos != nullptr) {  // Check if food position is valid
+        returnPos.setObjPos(food.pos->x, food.pos->y, food.symbol);
+    } else {
+        cout << "Error: food.pos is uninitialized!" << endl;
+    }
 }

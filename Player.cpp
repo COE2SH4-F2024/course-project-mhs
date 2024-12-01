@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "Player.h" 
 #include <iostream>
 
 
@@ -120,7 +120,6 @@ void Player::movePlayer() {
     // Create a new head position
     objPos newHead(newX, newY, '*');
     cout << "new head created" << endl;  // Debugging direction update
-
 
     // Add new head to the list and remove the tail
     playerPosList->insertHead(newHead);

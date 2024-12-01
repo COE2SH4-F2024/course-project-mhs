@@ -1,128 +1,91 @@
 #include "objPosArrayList.h"
 #include <iostream>
 
-#define ARRAY_MAX_CAP 200 // Example capacity
-
-
 using namespace std;
 
-// Paste your Tested implementation here.
-// Paste your Tested implementation here.
-// Paste your Tested implementation here.
+objPosArrayList::objPosArrayList()
+    : aList(new objPos[ARRAY_MAX_CAP]), listSize(0), arrayCapacity(ARRAY_MAX_CAP) {}
 
-
-objPosArrayList::objPosArrayList() // Default constructor
-{
-    aList = new objPos[ARRAY_MAX_CAP];
-    listSize = 0;
-    arrayCapacity = ARRAY_MAX_CAP;
+objPosArrayList::~objPosArrayList() {
+    delete[] aList; // Free allocated memory for the array
 }
 
-objPosArrayList::~objPosArrayList() // Destructor
-{
-    delete[] aList;
-}
-
-int objPosArrayList::getSize()const
-{
+int objPosArrayList::getSize() const {
     return listSize;
 }
 
-void objPosArrayList::getHeadElement(objPos &returnPos)
-{
-    if(listSize == 0)
-    {
+void objPosArrayList::getHeadElement(objPos &returnPos) {
+    if (listSize == 0) {
+        cout << "Error: Attempted to access head of an empty list." << endl;
         return;
     }
-    //cout << "Head position: (" << aList[0].pos->x << ", " << aList[0].pos->y << ")" << endl;
-    
-    returnPos.setObjPos(aList[0]);
+    returnPos = aList[0]; // Deep copy of the head element
 }
 
-void objPosArrayList::getTailElement(objPos &returnPos)
-{
-    if(listSize == 0)
-    {
+void objPosArrayList::getTailElement(objPos &returnPos) {
+    if (listSize == 0) {
+        cout << "Error: Attempted to access tail of an empty list." << endl;
         return;
     }
-    returnPos.setObjPos(aList[listSize-1]);
+    returnPos = aList[listSize - 1]; // Deep copy of the tail element
 }
 
-void objPosArrayList::getElement(objPos &returnPos, int index)
-{
-    if(listSize == 0 || index < 0 || index >= listSize)
-    {
+void objPosArrayList::getElement(objPos &returnPos, int index) {
+    if (index < 0 || index >= listSize) {
+        cout << "Error: Index " << index << " out of bounds for getElement." << endl;
         return;
     }
-
-    //returnPos.setObjPos(aList[index]);
-    returnPos.setObjPos(aList[index].pos->x, aList[index].pos->y, aList[index].symbol);
-
+    returnPos = aList[index];  // Deep copy of the indexed element
 }
 
-void objPosArrayList::insertHead(objPos thisPos)
-{
-    cout << "Before inserting, listSize: " << listSize << endl;
-
-    // Check if the array is at max capacity
-    if (listSize == arrayCapacity)
-    {
-        cout << "Array is full. Cannot insert head" << endl;
+void objPosArrayList::insertHead(objPos thisPos) {
+    if (listSize == arrayCapacity) {
+        cout << "Error: Array is full. Cannot insert head." << endl;
         return;
     }
 
-    // Shift elements towards the tail to make space for the new head
-    for (int i = listSize; i > 0; i--)
-    {
-        cout << "Shifting element from index " << i-1 << " to index " << i << endl; // Debug print
-        aList[i].setObjPos(aList[i - 1]);  // Shift the element towards the tail
+    // Shift elements to make room for the new head
+    for (int i = listSize; i > 0; --i) {
+        aList[i] = aList[i - 1]; // Deep copy to the next position
     }
 
-    // Insert the new head at the front of the list
-    cout << "Inserting head at (" << thisPos.pos->x << ", " << thisPos.pos->y << ")" << endl;
-    aList[0].setObjPos(thisPos);
+    // Insert the new head
+    aList[0] = thisPos; // Deep copy of thisPos
     listSize++;
+    cout << "List size after insert: " << listSize << endl;  // Debugging
 
-    cout << "After insertion, listSize: " << listSize << endl;
 }
 
-
-
-
-void objPosArrayList::insertTail(objPos thisPos)
-{
-    if(listSize == arrayCapacity)
-    {
-        cout<<"Array is full. Cannot insert tail" << endl ;
+void objPosArrayList::insertTail(objPos thisPos) {
+    if (listSize == arrayCapacity) {
+        cout << "Error: Array is full. Cannot insert tail." << endl;
         return;
     }
 
-    // insert element at the end of the list
-    aList[listSize++].setObjPos(thisPos); 
+    // Insert element at the end
+    aList[listSize] = thisPos; // Deep copy of thisPos
+    listSize++;
 }
 
-void objPosArrayList::removeHead()
-{
-    // check if the array is empty
-    if(listSize == 0)
-    {
+void objPosArrayList::removeHead() {
+    if (listSize == 0) {
+        cout << "Error: Attempted to remove head of an empty list." << endl;
         return;
     }
 
-    for(int i = 0; i < listSize - 1; i++)   
-        aList[i].setObjPos(aList[i + 1]);  // shift towards  head
+    // Shift elements to overwrite the first element
+    for (int i = 0; i < listSize - 1; ++i) {
+        aList[i] = aList[i + 1]; // Deep copy to the previous position
+    }
 
     listSize--;
 }
 
-void objPosArrayList::removeTail()
-{
-    // check if the array is empty
-    if(listSize == 0)
-    {
+void objPosArrayList::removeTail() {
+    if (listSize == 0) {
+        cout << "Error: Attempted to remove tail of an empty list." << endl;
         return;
     }
 
-    listSize--;  
+    listSize--; // Simply decrement size
 }
-

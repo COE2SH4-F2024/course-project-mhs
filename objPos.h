@@ -14,26 +14,22 @@ class objPos
         Pos* pos;        
         char symbol;
 
-        objPos();
-        objPos(int xPos, int yPos, char sym);
-        
-        // Respect the rule of six / minimum four
-        // [TODO] Implement the missing special member functions to meet the minimum four rule
-        
-        objPos(const objPos &o); // copy constructor
-        objPos(objPos&& o) noexcept;        // move constructor
-        objPos& operator=(const objPos& o); // copy assignment operator
-        objPos& operator=(objPos&& o) noexcept; // move assignment operator
-        ~objPos(); // destructor to delete the dynamically allocated `pos`.
+        objPos();  // Default constructor
+        objPos(int xPos, int yPos, char sym);  // Parametrized constructor
 
-        void setObjPos(objPos o);        
-        void setObjPos(int xPos, int yPos, char sym);  
+        objPos(const objPos& other);  // Copy constructor
+        objPos& operator=(const objPos& other);  // Copy assignment operator
+        objPos(objPos&& other) noexcept;  // Move constructor
+        objPos& operator=(objPos&& other) noexcept;  // Move assignment operator
+        ~objPos();  // Destructor to delete the dynamically allocated `pos`
 
-        objPos getObjPos() const;
-        char getSymbol() const;
-        char getSymbolIfPosEqual(const objPos* refPos) const;
-        
-        bool isPosEqual(const objPos* refPos) const;
+        void setObjPos(const objPos& o);  // Set position using another objPos
+        void setObjPos(int xPos, int yPos, char sym);  // Set position using x, y, and symbol
+        objPos getObjPos() const;  // Get a copy of objPos
+
+        char getSymbol() const;  // Get the symbol
+        bool isPosEqual(const objPos* refPos) const;  // Check if positions match
+        char getSymbolIfPosEqual(const objPos* refPos) const;  // Get symbol if positions match
 };
 
 #endif

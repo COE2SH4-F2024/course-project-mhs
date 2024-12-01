@@ -5,12 +5,12 @@ objPos::objPos()
     pos = new Pos;
     pos->x = 0;
     pos->y = 0;
-    symbol = 0; //NULL
+    symbol = ' '; //NULL
 }
 
 
-objPos::objPos(int xPos, int yPos, char sym)
-{
+objPos::objPos(int xPos, int yPos, char sym) {
+    pos = new Pos();
     pos->x = xPos;
     pos->y = yPos;
     symbol = sym;
@@ -20,12 +20,38 @@ objPos::objPos(int xPos, int yPos, char sym)
 // [TODO] Implement the missing special member functions to meet the minimum four rule
 
 // deep copy
+
 objPos::objPos(const objPos& o) 
 {
-    pos = new Pos;             // Allocate new memory for the `pos` pointer.
-    pos->x = o.pos->x;         // Deep copy the `x` coordinate.
-    pos->y = o.pos->y;         // Deep copy the `y` coordinate.
-    symbol = o.symbol;         // Copy the symbol directly.
+    pos = new Pos{*o.pos};
+    symbol = o.symbol;
+}
+
+// copy Assignment Operator
+objPos& objPos::operator=(const objPos& other) {
+    if (this != &other) {
+        delete pos;
+        pos = new Pos{*other.pos};
+        symbol = other.symbol;
+    }
+    return *this;
+}
+
+// move Constructor
+objPos::objPos(objPos&& other) noexcept 
+    : pos(other.pos), symbol(other.symbol) {
+    other.pos = nullptr;
+}
+
+// move Assignment Operator
+objPos& objPos::operator=(objPos&& other) noexcept {
+    if (this != &other) {
+        delete pos;
+        pos = other.pos;
+        symbol = other.symbol;
+        other.pos = nullptr;
+    }
+    return *this;
 }
 
 objPos::~objPos()
@@ -35,15 +61,15 @@ objPos::~objPos()
 
 
 
-void objPos::setObjPos(objPos o)
-{
+// set object Position (by reference)
+void objPos::setObjPos(const objPos& o) {
     pos->x = o.pos->x;
     pos->y = o.pos->y;
     symbol = o.symbol;
 }
 
-void objPos::setObjPos(int xPos, int yPos, char sym)
-{
+// set object Position (by values)
+void objPos::setObjPos(int xPos, int yPos, char sym) {
     pos->x = xPos;
     pos->y = yPos;
     symbol = sym;
@@ -66,8 +92,9 @@ char objPos::getSymbol() const
 
 bool objPos::isPosEqual(const objPos* refPos) const
 {
-    return (refPos->pos->x == pos->x && refPos->pos->y == pos->y);
+    return refPos && refPos->pos->x == pos->x && refPos->pos->y == pos->y;
 }
+
 
 char objPos::getSymbolIfPosEqual(const objPos* refPos) const
 {
