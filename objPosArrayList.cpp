@@ -1,4 +1,8 @@
 #include "objPosArrayList.h"
+#include <iostream>
+
+#define ARRAY_MAX_CAP 200 // Example capacity
+
 
 using namespace std;
 
@@ -30,6 +34,7 @@ void objPosArrayList::getHeadElement(objPos &returnPos)
     {
         return;
     }
+    //cout << "Head position: (" << aList[0].pos->x << ", " << aList[0].pos->y << ")" << endl;
     
     returnPos.setObjPos(aList[0]);
 }
@@ -57,24 +62,38 @@ void objPosArrayList::getElement(objPos &returnPos, int index)
 
 void objPosArrayList::insertHead(objPos thisPos)
 {
-    // check if array is at max capacity
-    if(listSize == arrayCapacity)
+    cout << "Before inserting, listSize: " << listSize << endl;
+
+    // Check if the array is at max capacity
+    if (listSize == arrayCapacity)
     {
+        cout << "Array is full. Cannot insert head" << endl;
         return;
     }
 
-    // create space for a new element to be inserted at index 0
-    for(int i = listSize; i > 0; i--){
-        aList[i].setObjPos(aList[i - 1]);  // shift towards the tail
+    // Shift elements towards the tail to make space for the new head
+    for (int i = listSize; i > 0; i--)
+    {
+        cout << "Shifting element from index " << i-1 << " to index " << i << endl; // Debug print
+        aList[i].setObjPos(aList[i - 1]);  // Shift the element towards the tail
     }
+
+    // Insert the new head at the front of the list
+    cout << "Inserting head at (" << thisPos.pos->x << ", " << thisPos.pos->y << ")" << endl;
     aList[0].setObjPos(thisPos);
     listSize++;
+
+    cout << "After insertion, listSize: " << listSize << endl;
 }
+
+
+
 
 void objPosArrayList::insertTail(objPos thisPos)
 {
     if(listSize == arrayCapacity)
     {
+        cout<<"Array is full. Cannot insert tail" << endl ;
         return;
     }
 

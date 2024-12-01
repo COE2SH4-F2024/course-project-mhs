@@ -57,7 +57,7 @@ void Initialize(void)
 void GetInput(void)
 {
     myGM->getInput();
-    cout << "Input received: " << myGM->getInput() << endl; // Add this for debugging
+    cout << "Input received: " << myGM->getInput() << endl; // Added  for debugging
 
 
 }

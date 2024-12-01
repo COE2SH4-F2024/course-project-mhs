@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 
 Player::Player(GameMechs* thisGMRef) // constructor
@@ -49,11 +50,14 @@ void Player::updatePlayerDir()
 
             case ' ':
                 mainGameMechsRef->setExitTrue();
+                cout << "Forced Quit "<< endl; // Added  for debugging
                 break;
 
             case 'W': case 'w':
                 if (myDir != DOWN) {
                     myDir = UP;
+                    cout << "Direction updated to UP" << endl;  // Debugging direction update
+
                 }
                 break;
 
@@ -91,8 +95,11 @@ void Player::movePlayer() {
 
     switch (myDir) {
         case UP:
+            cout << "before switch" << endl;  // Debugging direction update
             newY--;
+            cout << "after y--" << endl;  // Debugging direction update
             if (newY < 1) newY = mainGameMechsRef->getBoardSizeY() - 2; // Wrap around
+            cout << "after wrap around" << endl;  // Debugging direction update
             break;
         case DOWN:
             newY++;
@@ -112,11 +119,18 @@ void Player::movePlayer() {
 
     // Create a new head position
     objPos newHead(newX, newY, '*');
+    cout << "new head created" << endl;  // Debugging direction update
+
 
     // Add new head to the list and remove the tail
     playerPosList->insertHead(newHead);
+    cout << "head added to list" << endl;  // Debugging direction update
     playerPosList->removeTail(); // Maintains snake length
+    cout << "tail remved from list" << endl;  // Debugging direction update
+
+    
 }
+
 
 bool Player::checkSelfCollision() {
    // objPos head = playerPosList->getHeadElement();
@@ -154,10 +168,10 @@ bool Player::checkFoodConsumption()
     return head.isPosEqual(&food);
 }
 
-void Player::increasePlayerLength() 
+/*void Player::increasePlayerLength() 
 {
     mainGameMechsRef->incrementScore(); // update score
     mainGameMechsRef->generateFood(playerPosList); // generate new food
 }
-
+*/
 // More methods to be added
