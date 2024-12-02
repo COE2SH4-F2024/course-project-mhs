@@ -8,8 +8,8 @@ using namespace std;
 
 GameMechs::GameMechs()
 {
-    boardSizeX = 30; 
-    boardSizeY = 15; 
+    boardSizeX = 20; 
+    boardSizeY = 20; 
     input = 0; 
     exitFlag = false;
     loseFlag = false; 
