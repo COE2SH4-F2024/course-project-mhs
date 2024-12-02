@@ -1,13 +1,12 @@
 #include "objPos.h"
+#include <iostream>
 
-objPos::objPos()
-{
-    pos = new Pos;
+objPos::objPos() {
+    pos = new Pos();  // Always allocate memory
     pos->x = 0;
     pos->y = 0;
-    symbol = ' '; //NULL
+    symbol = ' ';
 }
-
 
 objPos::objPos(int xPos, int yPos, char sym) {
     pos = new Pos();
@@ -16,90 +15,65 @@ objPos::objPos(int xPos, int yPos, char sym) {
     symbol = sym;
 }
 
-// Respect the rule of six / minimum four
-// [TODO] Implement the missing special member functions to meet the minimum four rule
-
-// deep copy
-
-objPos::objPos(const objPos& o) 
-{
-    pos = new Pos{*o.pos};
+objPos::objPos(const objPos& o) {
+    pos = new Pos(*o.pos);  // Deep copy
     symbol = o.symbol;
 }
 
-// copy Assignment Operator
 objPos& objPos::operator=(const objPos& other) {
     if (this != &other) {
-        delete pos;
-        pos = new Pos{*other.pos};
+        delete pos;  // Free existing memory
+        pos = new Pos(*other.pos);  // Deep copy
         symbol = other.symbol;
     }
     return *this;
 }
 
-// move Constructor
-objPos::objPos(objPos&& other) noexcept 
-    : pos(other.pos), symbol(other.symbol) {
-    other.pos = nullptr;
+objPos::objPos(objPos&& other) noexcept : pos(other.pos), symbol(other.symbol) {
+    other.pos = nullptr;  // Transfer ownership
 }
 
-// move Assignment Operator
 objPos& objPos::operator=(objPos&& other) noexcept {
     if (this != &other) {
-        delete pos;
-        pos = other.pos;
+        delete pos;  // Free existing memory
+        pos = other.pos;  // Take ownership
         symbol = other.symbol;
         other.pos = nullptr;
     }
     return *this;
 }
 
-objPos::~objPos()
-{
-    delete pos;
+objPos::~objPos() {
+    if (pos) {
+        delete pos;
+        pos = nullptr;
+    }
 }
 
-
-
-// set object Position (by reference)
 void objPos::setObjPos(const objPos& o) {
     pos->x = o.pos->x;
     pos->y = o.pos->y;
     symbol = o.symbol;
 }
 
-// set object Position (by values)
 void objPos::setObjPos(int xPos, int yPos, char sym) {
     pos->x = xPos;
     pos->y = yPos;
     symbol = sym;
 }
 
-objPos objPos::getObjPos() const
-{
-    objPos returnPos;
-    returnPos.pos->x = pos->x;
-    returnPos.pos->y = pos->y;
-    returnPos.symbol = symbol;
-    
-    return returnPos;
-}
-
-char objPos::getSymbol() const
-{
+char objPos::getSymbol() const {
     return symbol;
 }
 
-bool objPos::isPosEqual(const objPos* refPos) const
-{
-    return refPos && refPos->pos->x == pos->x && refPos->pos->y == pos->y;
+bool objPos::isPosEqual(const objPos* refPos) const {
+    if (!refPos || !refPos->pos || !pos) {
+        std::cerr << "Error: Null pointer in isPosEqual()" << std::endl;
+        return false;
+    }
+    return (refPos->pos->x == pos->x && refPos->pos->y == pos->y);
 }
 
-
-char objPos::getSymbolIfPosEqual(const objPos* refPos) const
-{
-    if(isPosEqual(refPos))
-        return symbol;
-    else
-        return 0;
+char objPos::getSymbolIfPosEqual(const objPos* refPos) const {
+    return isPosEqual(refPos) ? symbol : 0;
 }

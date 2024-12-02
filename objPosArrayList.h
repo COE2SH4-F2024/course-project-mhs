@@ -11,8 +11,7 @@ class objPosArrayList
     private:
         objPos* aList;
         int listSize;
-        int arrayCapacity;
-
+        int sizeArray;
     public:
         objPosArrayList();
         ~objPosArrayList();
@@ -22,6 +21,7 @@ class objPosArrayList
         void insertTail(objPos thisPos);
         void removeHead();
         void removeTail();
+        void resizeArray();
         
         void getHeadElement(objPos &returnPos);
         void getTailElement(objPos &returnPos);

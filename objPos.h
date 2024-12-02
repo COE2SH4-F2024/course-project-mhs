@@ -8,6 +8,8 @@ typedef struct
     int y;
 } Pos;
 
+
+
 class objPos
 {
     public:
@@ -25,6 +27,7 @@ class objPos
 
         void setObjPos(const objPos& o);  // Set position using another objPos
         void setObjPos(int xPos, int yPos, char sym);  // Set position using x, y, and symbol
+       
         objPos getObjPos() const;  // Get a copy of objPos
 
         char getSymbol() const;  // Get the symbol

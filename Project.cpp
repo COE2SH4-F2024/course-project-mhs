@@ -62,49 +62,32 @@ void GetInput(void)
 
 }
 
-void RunLogic(void)
-{
-    
-    // init local variabels 
-    objPos tempFood;
+void RunLogic(void) {
     objPos tempBody;
-    objPos newInsert;
 
+    // Get the player's body and head position
     objPosArrayList* playerBody = myPlayer->getPlayerPos();
-   
-    myGM->getFoodPos(tempFood);
+    playerBody->getHeadElement(tempBody);
 
-    myPlayer->getPlayerPos()->getHeadElement(tempBody);  // Get the head element by reference
+    // Player movement controls
+    myPlayer->updatePlayerDir();
+    myPlayer->movePlayer();
 
-
-    // player movement controls
-    myPlayer->updatePlayerDir();  
-    myPlayer->movePlayer(); 
-
-    // food mechanism:
-
-    // compare head pos with food pos
-    // if equalm, increment score + generate new food + grow snake
-
-   // playerBody->getHeadElement(tempBody);
-
-    if(tempBody.isPosEqual(&tempFood))
-    {
-        myGM->incrementScore();
-        newInsert.setObjPos(tempBody.pos->x, tempBody.pos->y, '*');
-        myPlayer->getPlayerPos()->insertHead(newInsert);
-        myGM->generateFood(myPlayer->getPlayerPos());  // Generate new food
+    // Food mechanism: Check for consumption and grow if necessary
+   if (myPlayer->checkFoodConsumption()) 
+   {
+    myPlayer->increasePlayerLength();
     }
 
-    // self collision
-
-     if(myPlayer->checkSelfCollision())
-    {
+    // Self-collision detection
+    if (myPlayer->checkSelfCollision()) {
         myGM->setLoseFlag();
     }
-    myGM->clearInput();
 
+    // Clear input for the next cycle
+    myGM->clearInput();
 }
+
 
 void DrawScreen(void)
 {
@@ -130,11 +113,6 @@ void DrawScreen(void)
         {
             drawn = false;
             
-            /* Drawing the player:
-                - Iterates through the array list of player objects
-                - Displays the symbol associates with each object instance each time it occurs
-                - Once it's drawn, sets the boolean "drawn" to true, breaking the loop to prevent overlaps
-            */
             for(int k = 0; k < playerBody->getSize(); k++)
             {
                 playerBody->getElement(tempBody, k);

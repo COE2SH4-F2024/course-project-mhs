@@ -1,44 +1,28 @@
-#include "Player.h" 
 #include <iostream>
+#include "MacUILib.h"
+#include "objPos.h"
+#include "GameMechs.h"
+#include "Player.h"
+#include "objPosArrayList.h"
 
-
-Player::Player(GameMechs* thisGMRef) // constructor
-{
-   //intitialzing data members 
+Player::Player(GameMechs* thisGMRef) {
     mainGameMechsRef = thisGMRef;
     myDir = STOP;
 
-
-
-    // more actions to be included
-
+    // Initialize playerPosList and insert the starting head position
     playerPosList = new objPosArrayList();
-
-    // initializing the head of the player as the first element of the array
     objPos tempPos;
-    tempPos.setObjPos(mainGameMechsRef->getBoardSizeX()/2, mainGameMechsRef->getBoardSizeY()/2, '*'); 
+    tempPos.setObjPos(mainGameMechsRef->getBoardSizeX() / 2, mainGameMechsRef->getBoardSizeY() / 2, '*');
     playerPosList->insertHead(tempPos);
-
 }
 
-
-Player::~Player() // deconsturctor 
-{
-    // delete any heap members here
+Player::~Player() {
     delete playerPosList;
-
 }
 
-objPosArrayList* Player::getPlayerPos() const
-{
-    // return the reference to the playerPos arrray list
-    //return playerPosList->getHeadElement();
-
-    objPos head;
-    playerPosList->getHeadElement(head);  // pass head by reference to get the head element
-    return playerPosList;  // return the head object
+objPosArrayList* Player::getPlayerPos() const {
+    return playerPosList; // Return reference to playerPosList
 }
-
 void Player::updatePlayerDir()
 {
     // PPA3 input processing logic  
@@ -50,13 +34,11 @@ void Player::updatePlayerDir()
 
             case ' ':
                 mainGameMechsRef->setExitTrue();
-                cout << "Forced Quit "<< endl; // Added  for debugging
                 break;
 
             case 'W': case 'w':
                 if (myDir != DOWN) {
                     myDir = UP;
-                    cout << "Direction updated to UP" << endl;  // Debugging direction update
 
                 }
                 break;
@@ -78,6 +60,9 @@ void Player::updatePlayerDir()
                     myDir = RIGHT;
                 }
                 break;
+                
+            default:
+            break;
         }
     }
 }
@@ -93,84 +78,103 @@ void Player::movePlayer() {
     int newX = currentHead.pos->x;
     int newY = currentHead.pos->y;
 
-    switch (myDir) {
+   switch (myDir)
+    {
         case UP:
-            cout << "before switch" << endl;  // Debugging direction update
             newY--;
-            cout << "after y--" << endl;  // Debugging direction update
-            if (newY < 1) newY = mainGameMechsRef->getBoardSizeY() - 2; // Wrap around
-            cout << "after wrap around" << endl;  // Debugging direction update
-            break;
-        case DOWN:
-            newY++;
-            if (newY >= mainGameMechsRef->getBoardSizeY() - 1) newY = 1; // Wrap around
-            break;
-        case LEFT:
-            newX--;
-            if (newX < 1) newX = mainGameMechsRef->getBoardSizeX() - 2; // Wrap around
+            if(newY <= 0){
+                newY = mainGameMechsRef->getBoardSizeY() - 2;
+            }
             break;
         case RIGHT:
             newX++;
-            if (newX >= mainGameMechsRef->getBoardSizeX() - 1) newX = 1; // Wrap around
+            if(newX > mainGameMechsRef->getBoardSizeX() - 2){
+                newX = 1;
+            }
             break;
+
+        case LEFT:
+            newX--;
+            if(newX <= 0){
+                newX = mainGameMechsRef->getBoardSizeX() - 2;
+            }
+            break;
+
+        case DOWN:
+            newY++;
+            if(newY > mainGameMechsRef->getBoardSizeY() - 2){
+                newY = 1;
+            }
+            break;
+
         default:
-            return; // No movement if direction is STOP
+            break;
     }
 
     // Create a new head position
     objPos newHead(newX, newY, '*');
-    cout << "new head created" << endl;  // Debugging direction update
 
     // Add new head to the list and remove the tail
     playerPosList->insertHead(newHead);
-    cout << "head added to list" << endl;  // Debugging direction update
     playerPosList->removeTail(); // Maintains snake length
-    cout << "tail remved from list" << endl;  // Debugging direction update
 
-    
 }
+
 
 
 bool Player::checkSelfCollision() {
-   // objPos head = playerPosList->getHeadElement();
+    if (playerPosList->getSize() <= 1) {
+        return false;
+    }
 
-  objPos head;
-    playerPosList->getHeadElement(head);  // Get the head element by reference
+    objPos head;
+    playerPosList->getHeadElement(head);
 
-    // iterate through the body, no head!!
-  for (int i = 1; i < playerPosList->getSize(); i++) 
-  {
+    for (int i = 1; i < playerPosList->getSize(); ++i) {
         objPos bodySegment;
-        playerPosList->getElement(bodySegment, i);  // get the body segment by reference
-
-        if (head.isPosEqual(&bodySegment)) 
-        {
-            return true;  // collision detected
+        playerPosList->getElement(bodySegment, i);
+        if (head.isPosEqual(&bodySegment)) {
+            return true;
         }
     }
-    return false;  // else no collision
+    return false;
 }
-
-
 
 bool Player::checkFoodConsumption() 
 {
-    //objPos head = *playerPosList->getHeadElement();
-    //objPos food = *mainGameMechsRef->getFoodPos(); //  current food position
     
-    objPos head;  // local variable to store the player's head position
-    playerPosList->getHeadElement(head);  // Update head with the first element
+    
+    objPos tempBody;
+    playerPosList->getHeadElement(tempBody);  // Update head with the first element
 
-    objPos food;  // local variable to store the food position
-    mainGameMechsRef->getFoodPos(food);  // Update food with the current food position
-    
-    return head.isPosEqual(&food);
+
+    objPos tempFood;
+    mainGameMechsRef->getFoodPos(tempFood);
+
+
+    return tempBody.isPosEqual(&tempFood);
+
+
+   
 }
 
-/*void Player::increasePlayerLength() 
-{
-    mainGameMechsRef->incrementScore(); // update score
-    mainGameMechsRef->generateFood(playerPosList); // generate new food
+
+void Player::increasePlayerLength() {
+    
+   
+    if (playerPosList->getSize() == 0) 
+    {
+        return;
+    }
+    objPos tempFood;
+    objPos tempBody;
+    objPos newInsert;
+
+    mainGameMechsRef->incrementScore();
+    newInsert.setObjPos(tempBody.pos->x, tempBody.pos->y, '*');
+    playerPosList->insertHead(newInsert);
+    mainGameMechsRef->generateFood(playerPosList);
 }
-*/
-// More methods to be added
+
+
+

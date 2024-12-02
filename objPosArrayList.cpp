@@ -3,89 +3,100 @@
 
 using namespace std;
 
-objPosArrayList::objPosArrayList()
-    : aList(new objPos[ARRAY_MAX_CAP]), listSize(0), arrayCapacity(ARRAY_MAX_CAP) {}
+objPosArrayList::objPosArrayList() // Default constructor
+{
+    aList = new objPos[ARRAY_MAX_CAP];
+    listSize = 0;
+    sizeArray = ARRAY_MAX_CAP;
+}
 
-objPosArrayList::~objPosArrayList() {
-    delete[] aList; // Free allocated memory for the array
+objPosArrayList::~objPosArrayList() // Destructor
+{
+    delete[] aList;
 }
 
 int objPosArrayList::getSize() const {
     return listSize;
 }
-
-void objPosArrayList::getHeadElement(objPos &returnPos) {
-    if (listSize == 0) {
-        cout << "Error: Attempted to access head of an empty list." << endl;
+void objPosArrayList::getHeadElement(objPos &returnPos)
+{
+    if(listSize == 0)
+    {
         return;
     }
-    returnPos = aList[0]; // Deep copy of the head element
+    
+    returnPos.setObjPos(aList[0]);
 }
 
-void objPosArrayList::getTailElement(objPos &returnPos) {
-    if (listSize == 0) {
-        cout << "Error: Attempted to access tail of an empty list." << endl;
+void objPosArrayList::getTailElement(objPos &returnPos)
+{
+    if(listSize == 0)
+    {
         return;
     }
-    returnPos = aList[listSize - 1]; // Deep copy of the tail element
+    returnPos.setObjPos(aList[listSize-1]);
+    
 }
 
-void objPosArrayList::getElement(objPos &returnPos, int index) {
-    if (index < 0 || index >= listSize) {
-        cout << "Error: Index " << index << " out of bounds for getElement." << endl;
+void objPosArrayList::getElement(objPos &returnPos, int index)
+{
+    if(listSize == 0 || index < 0 || index >= listSize)
+    {
         return;
     }
-    returnPos = aList[index];  // Deep copy of the indexed element
+
+    returnPos.setObjPos(aList[index]);
 }
 
-void objPosArrayList::insertHead(objPos thisPos) {
-    if (listSize == arrayCapacity) {
-        cout << "Error: Array is full. Cannot insert head." << endl;
+void objPosArrayList::insertHead(objPos thisPos)
+{
+    // Checking if the array is at max capacity
+    if(listSize == sizeArray)
+    {
         return;
     }
 
-    // Shift elements to make room for the new head
-    for (int i = listSize; i > 0; --i) {
-        aList[i] = aList[i - 1]; // Deep copy to the next position
+    // Creating space for a new element to be inserted at index 0
+    for(int i = listSize; i > 0; i--){
+        aList[i].setObjPos(aList[i - 1]);  // Shifting towards the tail
     }
-
-    // Insert the new head
-    aList[0] = thisPos; // Deep copy of thisPos
-    listSize++;
-    cout << "List size after insert: " << listSize << endl;  // Debugging
-
-}
-
-void objPosArrayList::insertTail(objPos thisPos) {
-    if (listSize == arrayCapacity) {
-        cout << "Error: Array is full. Cannot insert tail." << endl;
-        return;
-    }
-
-    // Insert element at the end
-    aList[listSize] = thisPos; // Deep copy of thisPos
+    aList[0].setObjPos(thisPos);
     listSize++;
 }
 
-void objPosArrayList::removeHead() {
-    if (listSize == 0) {
-        cout << "Error: Attempted to remove head of an empty list." << endl;
+void objPosArrayList::insertTail(objPos thisPos)
+{
+    // Checking if the array is at max capacity
+    if(listSize == sizeArray)
+    {
         return;
     }
 
-    // Shift elements to overwrite the first element
-    for (int i = 0; i < listSize - 1; ++i) {
-        aList[i] = aList[i + 1]; // Deep copy to the previous position
+    // Inserting an element at the end of the list
+    aList[listSize++].setObjPos(thisPos); 
+}
+
+void objPosArrayList::removeHead()
+{
+    // Checking if the array is empty
+    if(listSize == 0)
+    {
+        return;
     }
+
+    for(int i = 0; i < listSize - 1; i++)   
+        aList[i].setObjPos(aList[i + 1]);  // Shifting towards the head
 
     listSize--;
 }
 
-void objPosArrayList::removeTail() {
-    if (listSize == 0) {
-        cout << "Error: Attempted to remove tail of an empty list." << endl;
+void objPosArrayList::removeTail()
+{
+    // Checking if the array is empty
+    if(listSize == 0)
+    {
         return;
     }
 
-    listSize--; // Simply decrement size
+    listSize--;  
 }

@@ -2,102 +2,83 @@
 #include "MacUILib.h"
 #include <iostream>
 
+using namespace std;
 
-GameMechs::GameMechs()
-{
-    
+GameMechs::GameMechs() : food() {
     boardSizeX = 30; 
     boardSizeY = 15; 
     input = 0; 
     exitFlag = false;
     loseFlag = false; 
-    score = 0; 
-
+    score = 0;
+    food.pos = new Pos(); // Allocate memory for the position of the food
+    srand(time(NULL));    // Seed the random number generator once
 }
 
-GameMechs::GameMechs(int boardX, int boardY)
-{
+GameMechs::GameMechs(int boardX, int boardY) : food() {
     boardSizeX = boardX;
     boardSizeY = boardY;
-    score = 0; 
     input = 0; 
     exitFlag = false; 
     loseFlag = false; 
-    score = 0; 
-    food.pos = new Pos();  // Allocate memory for the position of the food
-
+    score = 0;
+    food.pos = new Pos(); // Allocate memory for the position of the food
+    srand(time(NULL));    // Seed the random number generator once
 } 
 
-// do you need a destructor?
-GameMechs::~GameMechs()
-{
-    // empty bc no heap data members
+GameMechs::~GameMechs() {
+    if (food.pos) {
+        delete food.pos;
+        food.pos = nullptr;
+    }
 }
 
-bool GameMechs::getExitFlagStatus() 
-{
+bool GameMechs::getExitFlagStatus() {
     return exitFlag;
-
 }
 
-bool GameMechs::getLoseFlagStatus() 
-{
+bool GameMechs::getLoseFlagStatus() {
     return loseFlag;
 }
-    
 
-char GameMechs::getInput()
-{
-    if (MacUILib_hasChar())
-    {
+char GameMechs::getInput() {
+    if (MacUILib_hasChar()) {
         input = MacUILib_getChar();
     }
-
-    return input;  
+    return input;
 }
- 
-int GameMechs::getScore() const
-{
+
+int GameMechs::getScore() const {
     return score;
-
 }
 
-void GameMechs::incrementScore()
-{
+void GameMechs::incrementScore() {
     score++;
 }
 
-int GameMechs::getBoardSizeX() const
-{
+int GameMechs::getBoardSizeX() const {
     return boardSizeX;
 }
 
-int GameMechs::getBoardSizeY() const
-{
+int GameMechs::getBoardSizeY() const {
     return boardSizeY;
 }
 
-
-void GameMechs::setExitTrue()
-{
+void GameMechs::setExitTrue() {
     exitFlag = true;
 }
 
-void GameMechs::setLoseFlag()
-{
-    loseFlag = true; 
+void GameMechs::setLoseFlag() {
+    loseFlag = true;
 }
 
-void GameMechs::setInput(char this_input)
-{
+void GameMechs::setInput(char this_input) {
     input = this_input;
 }
 
-void GameMechs::clearInput()
-{
-    input = 0; 
+void GameMechs::clearInput() {
+    input = 0;
 }
-        
 
 void GameMechs::generateFood(objPosArrayList* blockOff) // Food generation
 {
@@ -128,17 +109,14 @@ void GameMechs::generateFood(objPosArrayList* blockOff) // Food generation
     // once a valid position is found, set the food position
     food.setObjPos(food.pos->x, food.pos->y, 'O');  // Assuming 'F' is the food symbol
 
-
 }
 
- 
-// More methods should be added here
 
 void GameMechs::getFoodPos(objPos &returnPos) {
-
-    if (food.pos != nullptr) {  // Check if food position is valid
+    if (food.pos) {
         returnPos.setObjPos(food.pos->x, food.pos->y, food.symbol);
     } else {
-        cout << "Error: food.pos is uninitialized!" << endl;
+        cerr << "Error: food.pos is uninitialized. Returning default position." << endl;
+        returnPos.setObjPos(0, 0, ' '); // Default position
     }
 }
