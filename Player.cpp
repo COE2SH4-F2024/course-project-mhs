@@ -165,11 +165,37 @@ void Player::increasePlayerLength()
     int newX = currentHead.pos->x;
     int newY = currentHead.pos->y;
 
-    switch (myDir) {
-        case UP:    newY--; if (newY <= 0) newY = mainGameMechsRef->getBoardSizeY() - 2; break;
-        case DOWN:  newY++; if (newY > mainGameMechsRef->getBoardSizeY() - 2) newY = 1; break;
-        case LEFT:  newX--; if (newX <= 0) newX = mainGameMechsRef->getBoardSizeX() - 2; break;
-        case RIGHT: newX++; if (newX > mainGameMechsRef->getBoardSizeX() - 2) newX = 1; break;
+   switch (myDir)
+    {
+        case UP:
+            newY--;
+            if(newY <= 0){
+                newY = mainGameMechsRef->getBoardSizeY() - 2;
+            }
+            break;
+        case RIGHT:
+            newX++;
+            if(newX > mainGameMechsRef->getBoardSizeX() - 2){
+                newX = 1;
+            }
+            break;
+
+        case LEFT:
+            newX--;
+            if(newX <= 0){
+                newX = mainGameMechsRef->getBoardSizeX() - 2;
+            }
+            break;
+
+        case DOWN:
+            newY++;
+            if(newY > mainGameMechsRef->getBoardSizeY() - 2){
+                newY = 1;
+            }
+            break;
+
+        default:
+            break;
     }
 
     // Create new head position and add it
@@ -180,5 +206,4 @@ void Player::increasePlayerLength()
     mainGameMechsRef->incrementScore();
     mainGameMechsRef->generateFood(playerPosList);
 }
-
 
