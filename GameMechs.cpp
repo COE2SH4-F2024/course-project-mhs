@@ -1,78 +1,90 @@
 #include "GameMechs.h"
 #include "MacUILib.h"
 #include <iostream>
+#include "time.h"
+#include <cstdlib>
 
 using namespace std;
 
-GameMechs::GameMechs() : food() {
+GameMechs::GameMechs()
+{
     boardSizeX = 30; 
     boardSizeY = 15; 
     input = 0; 
     exitFlag = false;
     loseFlag = false; 
     score = 0;
-    food.pos = new Pos(); // Allocate memory for the position of the food
-    srand(time(NULL));    // Seed the random number generator once
+    food.setObjPos(10,10,'0');
 }
 
-GameMechs::GameMechs(int boardX, int boardY) : food() {
-    boardSizeX = boardX;
-    boardSizeY = boardY;
+GameMechs::GameMechs(int boardX, int boardY)
+{
+    boardSizeX = boardX; 
+    boardSizeY = boardY; 
     input = 0; 
-    exitFlag = false; 
+    exitFlag = false;
     loseFlag = false; 
     score = 0;
-    food.pos = new Pos(); // Allocate memory for the position of the food
-    srand(time(NULL));    // Seed the random number generator once
-} 
-
-GameMechs::~GameMechs() {
-    if (food.pos) {
-        delete food.pos;
-        food.pos = nullptr;
-    }
+    food.setObjPos(10,10,'0');
 }
 
-bool GameMechs::getExitFlagStatus() {
+
+GameMechs::~GameMechs() 
+{
+  
+}
+
+bool GameMechs::getExitFlagStatus() const
+{
     return exitFlag;
 }
 
-bool GameMechs::getLoseFlagStatus() {
+bool GameMechs::getLoseFlagStatus() const
+{
     return loseFlag;
 }
 
-char GameMechs::getInput() {
-    if (MacUILib_hasChar()) {
+char GameMechs::getInput() 
+{
+    if (MacUILib_hasChar()) 
+    {
         input = MacUILib_getChar();
     }
     return input;
 }
 
-int GameMechs::getScore() const {
+int GameMechs::getScore() const 
+{
     return score;
 }
 
-void GameMechs::incrementScore() {
+void GameMechs::incrementScore() 
+{
     score++;
 }
 
-int GameMechs::getBoardSizeX() const {
+int GameMechs::getBoardSizeX() const 
+{
     return boardSizeX;
 }
 
-int GameMechs::getBoardSizeY() const {
+int GameMechs::getBoardSizeY() const 
+{
     return boardSizeY;
 }
 
-void GameMechs::setExitTrue() {
+void GameMechs::setExitTrue() 
+{
     exitFlag = true;
 }
 
-void GameMechs::setLoseFlag() {
+void GameMechs::setLoseFlag() 
+{
     loseFlag = true;
 }
 
-void GameMechs::setInput(char this_input) {
+void GameMechs::setInput(char this_input) 
+{
     input = this_input;
 }
 
@@ -96,27 +108,22 @@ void GameMechs::generateFood(objPosArrayList* blockOff) // Food generation
         // check if the food position overlaps with any snake body part
         validFoodPosition = true; // Assume valid until proven otherwise
         for (int i = 0; i < blockOff->getSize(); i++) {
-            //tempPos = blockOff->getElement(i);  // Get the i-th body segment
-            blockOff->getElement(tempPos, i);  // Correctly call getElement with reference
-
+            tempPos = blockOff->getElement(i);  // Get the i-th body segment
             // if the food position matches any body segment, it's invalid
-            if (food.isPosEqual(&tempPos)) {
+            if (food.pos->x == tempPos.pos->x && food.pos->y == tempPos.pos->y) 
+            {
                 validFoodPosition = false;
                 break;  // Exit the loop and regenerate food
             }
         }
     }
     // once a valid position is found, set the food position
-    food.setObjPos(food.pos->x, food.pos->y, 'O');  // Assuming 'F' is the food symbol
+    food.setObjPos(food.pos->x, food.pos->y, 'O');  
 
 }
 
 
-void GameMechs::getFoodPos(objPos &returnPos) {
-    if (food.pos) {
-        returnPos.setObjPos(food.pos->x, food.pos->y, food.symbol);
-    } else {
-        cerr << "Error: food.pos is uninitialized. Returning default position." << endl;
-        returnPos.setObjPos(0, 0, ' '); // Default position
-    }
+objPos GameMechs::getFoodPos() const
+{
+    return food;
 }

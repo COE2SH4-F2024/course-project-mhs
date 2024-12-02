@@ -63,11 +63,13 @@ void GetInput(void)
 }
 
 void RunLogic(void) {
-    objPos tempBody;
 
     // Get the player's body and head position
+
     objPosArrayList* playerBody = myPlayer->getPlayerPos();
-    playerBody->getHeadElement(tempBody);
+    
+    objPos tempBody = playerBody->getHeadElement();
+
 
     // Player movement controls
     myPlayer->updatePlayerDir();
@@ -95,11 +97,11 @@ void DrawScreen(void)
 
     // initializing local variables
     bool drawn;
-    objPos tempBody;
-    objPos tempFood;
+
 
     objPosArrayList* playerBody = myPlayer->getPlayerPos();
-    myGM->getFoodPos(tempFood);
+    
+    objPos tempFood = myGM->getFoodPos();
 
     MacUILib_printf("--------Snake--------\n"); // game header message
 
@@ -115,7 +117,9 @@ void DrawScreen(void)
             
             for(int k = 0; k < playerBody->getSize(); k++)
             {
-                playerBody->getElement(tempBody, k);
+
+                objPos tempBody = playerBody->getElement(k);
+
                 if(j == tempBody.pos->x && i == tempBody.pos->y)
                 {
                     MacUILib_printf("%c", tempBody.symbol);

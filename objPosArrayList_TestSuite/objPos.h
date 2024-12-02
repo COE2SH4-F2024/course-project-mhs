@@ -8,26 +8,32 @@ typedef struct
     int y;
 } Pos;
 
+
+
 class objPos
 {
     public:
         Pos* pos;        
         char symbol;
 
-        objPos();
-        objPos(int xPos, int yPos, char sym);
-        
-        // Respect the rule of six / minimum four
-        // [TODO] Implement the missing special member functions to meet the minimum four rule
-        
-        void setObjPos(objPos o);        
-        void setObjPos(int xPos, int yPos, char sym);  
+        objPos();  // Default constructor
+        objPos(int xPos, int yPos, char sym);  // Parametrized constructor
 
-        objPos getObjPos() const;
-        char getSymbol() const;
-        char getSymbolIfPosEqual(const objPos* refPos) const;
-        
-        bool isPosEqual(const objPos* refPos) const;
+        ~objPos();  // Destructor to delete the dynamically allocated `pos`
+
+        objPos(const objPos& other);  // Copy constructor
+
+        objPos& operator=(const objPos& other);  // Copy assignment operator
+
+
+        void setObjPos(objPos o);  // Set position using another objPos
+        void setObjPos(int xPos, int yPos, char sym);  // Set position using x, y, and symbol
+       
+        objPos getObjPos() const;  // Get a copy of objPos
+
+        char getSymbol() const;  // Get the symbol
+        bool isPosEqual(const objPos* refPos) const;  // Check if positions match
+        char getSymbolIfPosEqual(const objPos* refPos) const;  // Get symbol if positions match
 };
 
 #endif

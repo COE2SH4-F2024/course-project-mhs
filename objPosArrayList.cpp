@@ -1,102 +1,120 @@
 #include "objPosArrayList.h"
 #include <iostream>
-
 using namespace std;
 
-objPosArrayList::objPosArrayList() // Default constructor
+// Check lecture contents on general purpose array list construction, 
+// and modify it to support objPos array list construction.
+
+objPosArrayList::objPosArrayList()
 {
-    aList = new objPos[ARRAY_MAX_CAP];
-    listSize = 0;
-    sizeArray = ARRAY_MAX_CAP;
+    listSize =0;
+    //alliocated in heap
+    arrayCapacity = ARRAY_MAX_CAP; //aka 200
+    aList = new objPos[arrayCapacity];
 }
 
-objPosArrayList::~objPosArrayList() // Destructor
+objPosArrayList::~objPosArrayList()
 {
     delete[] aList;
+    aList = nullptr;
+
 }
 
-int objPosArrayList::getSize() const {
+objPosArrayList::objPosArrayList(const objPosArrayList &l)
+{
+    //deep copy 
+    listSize = l.listSize;
+    arrayCapacity = l.arrayCapacity;
+    aList = new objPos[arrayCapacity];
+    for(int i = 0; i < listSize; i++)
+    {
+        aList[i] = l.aList[i];
+    }
+       
+}
+
+//copy assignment operator
+objPosArrayList &objPosArrayList::operator=(const objPosArrayList &l)
+{
+    if(this != &l)
+    {
+        delete[] aList; //aka starting all over
+       
+        listSize = l.listSize;
+        arrayCapacity = l.arrayCapacity;
+        aList = new objPos[arrayCapacity];
+
+        //deep copy
+        for(int i = 0; i < listSize; i++)
+        {
+            aList[i] = l.aList[i];
+        }
+    }
+ 
+    return *this;
+}
+
+int objPosArrayList::getSize() const
+{
     return listSize;
 }
-void objPosArrayList::getHeadElement(objPos &returnPos)
-{
-    if(listSize == 0)
-    {
-        return;
-    }
-    
-    returnPos.setObjPos(aList[0]);
-}
 
-void objPosArrayList::getTailElement(objPos &returnPos)
-{
-    if(listSize == 0)
-    {
-        return;
-    }
-    returnPos.setObjPos(aList[listSize-1]);
-    
-}
-
-void objPosArrayList::getElement(objPos &returnPos, int index)
-{
-    if(listSize == 0 || index < 0 || index >= listSize)
-    {
-        return;
-    }
-
-    returnPos.setObjPos(aList[index]);
-}
 
 void objPosArrayList::insertHead(objPos thisPos)
 {
-    // Checking if the array is at max capacity
-    if(listSize == sizeArray)
-    {
+    if(listSize >= arrayCapacity){
         return;
     }
-
-    // Creating space for a new element to be inserted at index 0
+   
     for(int i = listSize; i > 0; i--){
-        aList[i].setObjPos(aList[i - 1]);  // Shifting towards the tail
+        aList[i] = aList[i - 1]; //shifts elements down
     }
-    aList[0].setObjPos(thisPos);
+
+    aList[0] = thisPos;
     listSize++;
 }
 
 void objPosArrayList::insertTail(objPos thisPos)
 {
-    // Checking if the array is at max capacity
-    if(listSize == sizeArray)
+    if(listSize == arrayCapacity)
     {
         return;
     }
-
-    // Inserting an element at the end of the list
-    aList[listSize++].setObjPos(thisPos); 
+    aList[listSize++] = thisPos;  
 }
 
 void objPosArrayList::removeHead()
 {
-    // Checking if the array is empty
-    if(listSize == 0)
-    {
-        return;
-    }
-
-    for(int i = 0; i < listSize - 1; i++)   
-        aList[i].setObjPos(aList[i + 1]);  // Shifting towards the head
-
+    if(listSize == 0) return;
+ 
+    for(int i = 0; i < listSize - 1; i++)
+        aList[i] = aList[i+1];
+   
     listSize--;
 }
 
 void objPosArrayList::removeTail()
 {
-    // Checking if the array is empty
-    if(listSize == 0)
+    if(listSize > 0)
+        listSize--;
+}
+
+objPos objPosArrayList::getHeadElement() const
+{
+    return aList[0];  
+}
+
+objPos objPosArrayList::getTailElement() const
+{
+    return aList[listSize - 1];  
+}
+
+objPos objPosArrayList::getElement(int index) const
+{
+    if(index < 0 || index >= listSize)
     {
-        return;
+        index = 0;
     }
 
-    listSize--;  
+    return aList[index];
 }

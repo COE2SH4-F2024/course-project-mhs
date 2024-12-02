@@ -19,13 +19,14 @@ class objPos
         objPos();  // Default constructor
         objPos(int xPos, int yPos, char sym);  // Parametrized constructor
 
-        objPos(const objPos& other);  // Copy constructor
-        objPos& operator=(const objPos& other);  // Copy assignment operator
-        objPos(objPos&& other) noexcept;  // Move constructor
-        objPos& operator=(objPos&& other) noexcept;  // Move assignment operator
         ~objPos();  // Destructor to delete the dynamically allocated `pos`
 
-        void setObjPos(const objPos& o);  // Set position using another objPos
+        objPos(const objPos& other);  // Copy constructor
+
+        objPos& operator=(const objPos& other);  // Copy assignment operator
+
+
+        void setObjPos(objPos o);  // Set position using another objPos
         void setObjPos(int xPos, int yPos, char sym);  // Set position using x, y, and symbol
        
         objPos getObjPos() const;  // Get a copy of objPos

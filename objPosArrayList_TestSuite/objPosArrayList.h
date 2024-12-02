@@ -16,12 +16,19 @@ class objPosArrayList
         objPosArrayList();
         ~objPosArrayList();
 
+
+        // copy the constructor 
+        objPosArrayList(const objPosArrayList &l);
+        // copy the assigment constructor
+        objPosArrayList& operator=(const objPosArrayList &l);
+
         int getSize() const;
         void insertHead(objPos thisPos);
         void insertTail(objPos thisPos);
         void removeHead();
         void removeTail();
         
+        //getter
         objPos getHeadElement() const;
         objPos getTailElement() const;
         objPos getElement(int index) const;
